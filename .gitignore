@@ -1,0 +1,6 @@
+# Ignore for Xilinx Vivado Projects
+.Xil/
+#ignorar a pasta do projeto
+vivado_*/
+webtalk.*
+vivado.*
