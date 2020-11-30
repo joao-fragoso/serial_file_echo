@@ -7,8 +7,10 @@ set_property CONFIG_VOLTAGE 3.3 [current_design]
 ## Clock signal
 set_property -dict {PACKAGE_PIN E3 IOSTANDARD LVCMOS33} [get_ports clk]
 create_clock -period 10.000 -name sys_clk -waveform {0.000 5.000} -add [get_ports clk]
+
 set_false_path -from [get_ports rx] -to [get_clocks sys_clk]
 set_false_path -from [get_ports rst_n] -to [get_clocks sys_clk]
+
 set_max_delay -rise_from [get_clocks sys_clk] -to [get_ports -filter { NAME =~  "tx*" && DIRECTION == "OUT" }] 10.000
 set_max_delay -rise_from [get_clocks sys_clk] -to [get_ports -filter { NAME =~  "an*" && DIRECTION == "OUT" }] 20.000
 set_max_delay -rise_from [get_clocks sys_clk] -to [get_ports -filter { NAME =~  "seg*" && DIRECTION == "OUT" }] 20.000
@@ -255,39 +257,3 @@ set_property -dict {PACKAGE_PIN D4 IOSTANDARD LVCMOS33} [get_ports tx]
 #set_property -dict { PACKAGE_PIN L14   IOSTANDARD LVCMOS33 } [get_ports { QSPI_DQ[2] }]; #IO_L2P_T0_D02_14 Sch=qspi_dq[2]
 #set_property -dict { PACKAGE_PIN M14   IOSTANDARD LVCMOS33 } [get_ports { QSPI_DQ[3] }]; #IO_L2N_T0_D03_14 Sch=qspi_dq[3]
 #set_property -dict { PACKAGE_PIN L13   IOSTANDARD LVCMOS33 } [get_ports { QSPI_CSN }]; #IO_L6P_T0_FCS_B_14 Sch=qspi_csn
-
-
-create_debug_core u_ila_0 ila
-set_property ALL_PROBE_SAME_MU true [get_debug_cores u_ila_0]
-set_property ALL_PROBE_SAME_MU_CNT 1 [get_debug_cores u_ila_0]
-set_property C_ADV_TRIGGER false [get_debug_cores u_ila_0]
-set_property C_DATA_DEPTH 4096 [get_debug_cores u_ila_0]
-set_property C_EN_STRG_QUAL false [get_debug_cores u_ila_0]
-set_property C_INPUT_PIPE_STAGES 0 [get_debug_cores u_ila_0]
-set_property C_TRIGIN_EN false [get_debug_cores u_ila_0]
-set_property C_TRIGOUT_EN false [get_debug_cores u_ila_0]
-set_property port_width 1 [get_debug_ports u_ila_0/clk]
-connect_debug_port u_ila_0/clk [get_nets [list clk_IBUF_BUFG]]
-set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe0]
-set_property port_width 32 [get_debug_ports u_ila_0/probe0]
-connect_debug_port u_ila_0/probe0 [get_nets [list {file_handler_i/state[0]} {file_handler_i/state[1]} {file_handler_i/state[2]} {file_handler_i/state[3]} {file_handler_i/state[4]} {file_handler_i/state[5]} {file_handler_i/state[6]} {file_handler_i/state[7]} {file_handler_i/state[8]} {file_handler_i/state[9]} {file_handler_i/state[10]} {file_handler_i/state[11]} {file_handler_i/state[12]} {file_handler_i/state[13]} {file_handler_i/state[14]} {file_handler_i/state[15]} {file_handler_i/state[16]} {file_handler_i/state[17]} {file_handler_i/state[18]} {file_handler_i/state[19]} {file_handler_i/state[20]} {file_handler_i/state[21]} {file_handler_i/state[22]} {file_handler_i/state[23]} {file_handler_i/state[24]} {file_handler_i/state[25]} {file_handler_i/state[26]} {file_handler_i/state[27]} {file_handler_i/state[28]} {file_handler_i/state[29]} {file_handler_i/state[30]} {file_handler_i/state[31]}]]
-create_debug_port u_ila_0 probe
-set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe1]
-set_property port_width 8 [get_debug_ports u_ila_0/probe1]
-connect_debug_port u_ila_0/probe1 [get_nets [list {file_handler_i/rx_data[0]} {file_handler_i/rx_data[1]} {file_handler_i/rx_data[2]} {file_handler_i/rx_data[3]} {file_handler_i/rx_data[4]} {file_handler_i/rx_data[5]} {file_handler_i/rx_data[6]} {file_handler_i/rx_data[7]}]]
-create_debug_port u_ila_0 probe
-set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe2]
-set_property port_width 8 [get_debug_ports u_ila_0/probe2]
-connect_debug_port u_ila_0/probe2 [get_nets [list {file_handler_i/tx_data[0]} {file_handler_i/tx_data[1]} {file_handler_i/tx_data[2]} {file_handler_i/tx_data[3]} {file_handler_i/tx_data[4]} {file_handler_i/tx_data[5]} {file_handler_i/tx_data[6]} {file_handler_i/tx_data[7]}]]
-create_debug_port u_ila_0 probe
-set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe3]
-set_property port_width 1 [get_debug_ports u_ila_0/probe3]
-connect_debug_port u_ila_0/probe3 [get_nets [list file_handler_i/new_data]]
-create_debug_port u_ila_0 probe
-set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe4]
-set_property port_width 1 [get_debug_ports u_ila_0/probe4]
-connect_debug_port u_ila_0/probe4 [get_nets [list file_handler_i/req]]
-set_property C_CLK_INPUT_FREQ_HZ 300000000 [get_debug_cores dbg_hub]
-set_property C_ENABLE_CLK_DIVIDER false [get_debug_cores dbg_hub]
-set_property C_USER_SCAN_CHAIN 1 [get_debug_cores dbg_hub]
-connect_debug_port dbg_hub/clk [get_nets clk_IBUF_BUFG]
